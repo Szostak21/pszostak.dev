@@ -2,45 +2,87 @@ export interface Project {
   id: string;
   title: string;
   description: string;
+  longDescription?: string;
   image?: string;
+  screenshots?: string[];
   tags: string[];
   github?: string;
   demo?: string;
   featured?: boolean;
+  orientation: "landscape" | "portrait";
+  aspectRatio: "4:3" | "16:9";
+  deviceType: "desktop" | "mobile";
+  gradient?: string;
+  bgColor?: string;
 }
 
 export const projects: Project[] = [
   {
-    id: "project-1",
-    title: "Project One",
-    description: "A full-stack web application built with modern technologies. Features include real-time updates, authentication, and responsive design.",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL"],
-    github: "https://github.com/Szostak21/project-one",
-    demo: "https://project-one.vercel.app",
+    id: "cube-solver",
+    title: "Cube Solver",
+    description: "Desktop application using computer vision to scan and solve Rubik's Cubes in real-time.",
+    longDescription: "An intelligent application that leverages OpenCV for color recognition and implements efficient clustering algorithms to solve Rubik's Cubes. Features real-time camera capture and step-by-step solution visualization.",
+    tags: ["C++", "OpenCV", "Computer Vision", "Algorithms"],
+    github: "https://github.com/Szostak21/cube-solver",
     featured: true,
+    orientation: "landscape",
+    aspectRatio: "4:3",
+    deviceType: "desktop",
+    gradient: "from-blue-500 to-cyan-500",
+    bgColor: "bg-linear-to-br from-blue-500/90 to-cyan-500/90",
+    screenshots: ["/projects/cube_solver.png"],
   },
   {
-    id: "project-2",
-    title: "Project Two",
-    description: "Mobile-first e-commerce platform with payment integration and inventory management system.",
-    tags: ["React", "Node.js", "MongoDB", "Stripe"],
-    github: "https://github.com/Szostak21/project-two",
+    id: "guess-who",
+    title: "Guess Who?",
+    description: "Mobile adaptation of the classic board game with camera integration for custom boards.",
+    longDescription: "A Flutter-based mobile game featuring online multiplayer, pass-and-play mode, and innovative camera integration allowing players to create personalized game boards with their own photos.",
+    tags: ["Flutter", "WebSockets", "Mobile", "Real-time"],
+    github: "https://github.com/Szostak21/guess-who",
     featured: true,
+    orientation: "portrait",
+    aspectRatio: "16:9",
+    deviceType: "mobile",
+    gradient: "from-purple-500 to-pink-500",
+    bgColor: "bg-linear-to-br from-purple-500/90 to-pink-500/90",
+    screenshots: [
+      "/projects/guess-who-1.png",
+      "/projects/guess-who-2.png",
+      "/projects/guess-who-3.png"
+    ],
   },
   {
-    id: "project-3",
-    title: "Project Three",
-    description: "AI-powered tool that helps developers write better code through intelligent suggestions and analysis.",
-    tags: ["Python", "FastAPI", "OpenAI", "Docker"],
-    github: "https://github.com/Szostak21/project-three",
+    id: "self-improvement-tree",
+    title: "Self-Improvement Tree",
+    description: "Mobile SaaS app that gamifies personal development through habit tracking.",
+    longDescription: "A comprehensive habit-tracking application with cloud synchronization, payment integration via Stripe, and a gamification system that turns daily habits into an engaging progression tree. Features email confirmations and secure account management.",
+    tags: ["SaaS", "Stripe", "Mobile", "Cloud", "Gamification"],
+    github: "https://github.com/Szostak21/self-improvement-tree",
     featured: true,
+    orientation: "portrait",
+    aspectRatio: "16:9",
+    deviceType: "mobile",
+    gradient: "from-green-500 to-emerald-500",
+    bgColor: "bg-linear-to-br from-green-500/90 to-emerald-500/90",
+    screenshots: [
+      "/projects/tree-1.png",
+      "/projects/tree-2.png",
+      "/projects/tree-3.png"
+    ],
   },
   {
-    id: "project-4",
-    title: "Project Four",
-    description: "Real-time collaboration platform for remote teams with video conferencing and document editing.",
-    tags: ["Next.js", "WebRTC", "Socket.io", "Redis"],
-    github: "https://github.com/Szostak21/project-four",
-    featured: false,
+    id: "nebula",
+    title: "Nebula",
+    description: "Arcade runner game with procedural terrain generation and dynamic gameplay.",
+    longDescription: "A Python-based arcade game built with Kivy, featuring custom procedural generation algorithms that create unique terrain in real-time. Includes multiple game modes and immersive visual effects.",
+    tags: ["Python", "Kivy", "Game Dev", "Procedural Generation"],
+    github: "https://github.com/Szostak21/nebula",
+    featured: true,
+    orientation: "landscape",
+    aspectRatio: "4:3",
+    deviceType: "desktop",
+    gradient: "from-violet-500 to-purple-500",
+    bgColor: "bg-linear-to-br from-violet-500/90 to-purple-500/90",
+    screenshots: ["/projects/nebula-1.png"],
   },
 ];
