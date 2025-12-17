@@ -29,7 +29,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="py-24 sm:py-32 md:py-40 relative overflow-hidden"
+      className="pt-0 pb-24 sm:pb-32 md:pb-40 relative overflow-hidden"
       style={{
         scrollMarginTop: "120px",
       }}
