@@ -92,14 +92,12 @@ const orbVariants: Variants = {
 export function ReactiveAvatar({ state, className }: ReactiveAvatarProps) {
   return (
     <div className={cn("relative flex items-center justify-center", className)}>
-      {/* Outer glow ring */}
       <motion.div
         className="absolute w-32 h-32 rounded-full bg-linear-to-r from-violet-500/30 to-purple-500/30 blur-xl"
         variants={glowVariants}
         animate={state}
       />
 
-      {/* Orbiting particles */}
       <motion.div
         className="absolute w-28 h-28"
         variants={orbVariants}
@@ -127,7 +125,6 @@ export function ReactiveAvatar({ state, className }: ReactiveAvatarProps) {
         ))}
       </motion.div>
 
-      {/* Main avatar circle */}
       <motion.div
         className={cn(
           "relative w-24 h-24 rounded-full flex items-center justify-center",
@@ -137,10 +134,8 @@ export function ReactiveAvatar({ state, className }: ReactiveAvatarProps) {
         variants={pulseVariants}
         animate={state}
       >
-        {/* Inner gradient overlay */}
         <div className="absolute inset-1 rounded-full bg-linear-to-br from-white/20 to-transparent" />
 
-        {/* State indicator */}
         <AnimatePresence mode="wait">
           {state === "idle" && (
             <motion.div
@@ -202,7 +197,6 @@ export function ReactiveAvatar({ state, className }: ReactiveAvatarProps) {
         </AnimatePresence>
       </motion.div>
 
-      {/* Status text */}
       <motion.span
         className="absolute -bottom-8 text-xs text-white/50 font-medium"
         initial={{ opacity: 0 }}

@@ -65,10 +65,7 @@ export default function Navbar() {
     >
       <nav className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
         <div className="flex items-center justify-between">
-          {/* Theme Toggle - Left */}
           <ThemeToggle />
-          
-          {/* Desktop Navigation - Centered */}
           <div className="flex items-center gap-1 glass-strong rounded-full shadow-xl shadow-black/10" style={{ padding: "16px 32px" }}>
             {navItems.map((item) => (
               <a
@@ -85,7 +82,6 @@ export default function Navbar() {
                   ? (e) => {
                       e.preventDefault();
                       window.scrollTo({ top: 0, behavior: "smooth" });
-                      // Update the URL hash to #home
                       window.history.pushState(null, '', '/#home');
                     }
                   : undefined}
@@ -106,8 +102,6 @@ export default function Navbar() {
               </a>
             ))}
           </div>
-          
-          {/* Spacer for balance */}
           <div className="w-14 h-14"></div>
         </div>
       </nav>

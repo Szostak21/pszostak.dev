@@ -37,5 +37,5 @@ export const siteConfig = {
   email: "pawelszostak21@gmail.com",
   location: "Poland",
   available: true,
-  calLink: "https://cal.com/yourname", // Replace with your Cal.com link
+  calLink: "https://cal.com/yourname",
 };

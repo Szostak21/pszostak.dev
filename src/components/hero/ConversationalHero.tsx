@@ -15,7 +15,6 @@ export function ConversationalHero() {
 
   const isLoading = status === "streaming" || status === "submitted";
 
-  // Determine avatar state based on chat status
   const getAvatarState = (): AvatarState => {
     if (status === "streaming") {
       return "speaking";
@@ -41,7 +40,6 @@ export function ConversationalHero() {
     await sendMessage({ text: question });
   };
 
-  // Convert messages format for ChatHistory
   const formattedMessages: ChatMessage[] = messages.map((msg) => ({
     id: msg.id,
     role: msg.role as "user" | "assistant",
@@ -83,7 +81,6 @@ export function ConversationalHero() {
 
         </div>
 
-        {/* Chat Container */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -95,14 +92,12 @@ export function ConversationalHero() {
             "overflow-hidden"
           )}
         >
-          {/* Chat History */}
           <ChatHistory
             messages={formattedMessages}
             isLoading={isLoading && formattedMessages[formattedMessages.length - 1]?.role === "user"}
             className="h-80 sm:h-96 lg:h-80"
           />
 
-          {/* Divider */}
           <div className="h-px bg-white/10" />
 
           <div style={{ padding: "16px" }}>
@@ -117,7 +112,6 @@ export function ConversationalHero() {
           </div>
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

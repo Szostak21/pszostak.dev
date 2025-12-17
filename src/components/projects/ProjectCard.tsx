@@ -32,11 +32,7 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         isLarge ? "md:col-span-2" : ""
       )}
     >
-      {/* ============================================
-          HEADER - Outside/Above the card
-          ============================================ */}
       <header className="mb-6">
-        {/* Project number & type */}
         <div className="flex items-center gap-3 mb-3">
           <span className="text-sm font-mono tracking-wider uppercase text-[var(--muted)]">
             0{index + 1}
@@ -46,8 +42,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
             {projectLabel}
           </span>
         </div>
-        
-        {/* Title row with links */}
         <div className="flex items-center justify-between gap-4">
           <h3 className={cn(
             "font-bold tracking-tight text-[var(--foreground)]",
@@ -55,8 +49,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
           )}>
             {project.title}
           </h3>
-          
-          {/* Hover-reveal links */}
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {project.github && (
               <a 
@@ -84,9 +76,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         </div>
       </header>
 
-      {/* ============================================
-          CARD BODY - Colored container
-          ============================================ */}
       <div
         className={cn(
           "relative overflow-hidden rounded-3xl",
@@ -94,7 +83,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
           isLarge ? "min-h-[600px]" : "min-h-[480px]"
         )}
       >
-        {/* Gradient Background */}
         <div 
           className={cn(
             "absolute inset-0 -z-10 bg-gradient-to-br",
@@ -102,9 +90,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
           )} 
         />
 
-        {/* ----------------------------------------
-            DESCRIPTION
-            ---------------------------------------- */}
         <div className="relative z-20 px-8 pt-8 pb-6 md:px-12 md:pt-10 md:pb-8">
           <p className={cn(
             "text-white/90 leading-relaxed font-medium text-balance max-w-2xl drop-shadow-sm",
@@ -114,15 +99,9 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
           </p>
         </div>
 
-        {/* ----------------------------------------
-            DEVICE MOCKUPS - Anchored to bottom
-            ---------------------------------------- */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center items-end">
           {isMobile ? (
-            /* --- MOBILE MOCKUP --- */
             <div className="relative w-full max-w-md h-[300px] md:h-[380px]">
-              
-              {/* Left phone - Przesunięty w dół (-bottom-28) */}
               {screenshots[1] && (
                 <motion.div 
                   className="absolute left-4 md:left-8 -bottom-28 w-[38%] z-10 origin-bottom"
@@ -138,8 +117,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                   </div>
                 </motion.div>
               )}
-              
-              {/* Right phone - Przesunięty w dół (-bottom-28) */}
               {screenshots[2] && (
                 <motion.div 
                   className="absolute right-4 md:right-8 -bottom-28 w-[38%] z-10 origin-bottom"
@@ -155,15 +132,12 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                   </div>
                 </motion.div>
               )}
-              
-              {/* Center phone (main) - Przesunięty w dół (-bottom-28) */}
               <motion.div 
                 className="absolute left-1/2 -translate-x-1/2 -bottom-28 w-[45%] z-20 origin-bottom"
                 whileHover={{ scale: 1.1 }} 
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <div className="relative aspect-[9/19] rounded-t-3xl border-x-[6px] border-t-[6px] border-neutral-900 bg-neutral-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
-                  {/* Dynamic Island / Notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-5 bg-black rounded-b-xl z-30" />
                   <img 
                     src={screenshots[0]} 
@@ -174,29 +148,23 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
               </motion.div>
             </div>
           ) : (
-            /* --- DESKTOP MOCKUP (Fixed Structure with Flexbox) --- */
             <motion.div
               className="w-[88%] md:w-[82%] origin-bottom"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              {/* Zmieniono aspect na 16/12 (standard dla laptopów) i dodano flex-col aby naprawić rogi */}
               <div className="relative aspect-[16/12] rounded-t-xl bg-neutral-900 border-x border-t border-white/10 overflow-hidden shadow-2xl flex flex-col">
-                
-                {/* Header Bar - Static element (nie absolute), naprawia bug graficzny */}
                 <div className="h-7 bg-neutral-800/90 flex items-center gap-1.5 px-4 border-b border-white/5 z-20 shrink-0">
                   <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
                   <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
                   <div className="w-3 h-3 rounded-full bg-[#28C840]" />
                 </div>
 
-                {/* Image Container - Wypełnia resztę miejsca */}
                 <div className="relative flex-1 w-full bg-neutral-900">
                   {screenshots[0] ? (
                     <img 
                       src={screenshots[0]} 
                       alt={`${project.title} screenshot`} 
-                      // Używamy absolute inset-0 zamiast pt-7, bo nagłówek jest teraz nad nami
                       className="absolute inset-0 w-full h-full object-cover object-top" 
                     />
                   ) : (
@@ -211,9 +179,6 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         </div>
       </div>
 
-      {/* ============================================
-          FOOTER - Tags below the card
-          ============================================ */}
       <footer className="flex flex-wrap gap-2 mt-6">
         {project.tags.map((tag) => (
           <span 

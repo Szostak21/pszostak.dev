@@ -46,9 +46,9 @@ export const projects: Project[] = [
     gradient: "from-purple-500 to-pink-500",
     bgColor: "bg-linear-to-br from-purple-500/90 to-pink-500/90",
     screenshots: [
-      "/projects/guess-who-1.png",
-      "/projects/guess-who-2.png",
-      "/projects/guess-who-3.png"
+      "/projects/guess_who_1.jpg",
+      "/projects/guess_who_2.jpg",
+      "/projects/guess_who_3.jpg"
     ],
   },
   {
@@ -65,9 +65,9 @@ export const projects: Project[] = [
     gradient: "from-green-500 to-emerald-500",
     bgColor: "bg-linear-to-br from-green-500/90 to-emerald-500/90",
     screenshots: [
-      "/projects/tree-1.png",
-      "/projects/tree-2.png",
-      "/projects/tree-3.png"
+      "/projects/tree_1.png",
+      "/projects/tree_2.png",
+      "/projects/tree_3.png"
     ],
   },
   {
@@ -83,6 +83,6 @@ export const projects: Project[] = [
     deviceType: "desktop",
     gradient: "from-violet-500 to-purple-500",
     bgColor: "bg-linear-to-br from-violet-500/90 to-purple-500/90",
-    screenshots: ["/projects/nebula-1.png"],
+    screenshots: ["/projects/nebula.png"],
   },
 ];
