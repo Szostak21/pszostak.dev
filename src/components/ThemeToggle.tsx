@@ -12,7 +12,6 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  // Prevent rendering until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
       <div className="w-14 h-14 rounded-full glass-strong flex items-center justify-center">

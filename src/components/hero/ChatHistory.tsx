@@ -100,7 +100,6 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 export function ChatHistory({ messages, isLoading, className }: ChatHistoryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

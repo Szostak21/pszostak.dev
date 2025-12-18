@@ -24,15 +24,11 @@ export default async function handler(req: Request) {
   try {
     const { messages } = await req.json();
 
-    // Convert UI messages (client format) to model messages expected by the
-    // language model provider. Use the SDK helper if possible, otherwise
-    // fall back to a simple conversion (parts -> text).
     let modelMessages: CoreMessage[] = [];
     if (messages && messages.length) {
       try {
         modelMessages = convertToModelMessages(messages);
       } catch {
-        // Fallback conversion: join text parts into a single string
         modelMessages = (messages as UIMessage[]).map((m) => ({
           role: m.role as "user" | "assistant",
           content:
@@ -48,8 +44,6 @@ export default async function handler(req: Request) {
       temperature: 0.7,
     });
 
-    // Use the AI SDK helper to convert the streaming result into a UI message
-    // stream response that the client `useChat` hook can consume.
     return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error("Chat API error:", error);
