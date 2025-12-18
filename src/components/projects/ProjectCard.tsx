@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Github, ArrowUpRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { cn } from "@/lib/utils";
@@ -80,12 +81,12 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         className={cn(
           "relative overflow-hidden rounded-3xl",
           "border border-white/5",
-          isLarge ? "min-h-[600px]" : "min-h-[480px]"
+          isLarge ? "min-h-150" : "min-h-120"
         )}
       >
         <div 
           className={cn(
-            "absolute inset-0 -z-10 bg-gradient-to-br",
+            "absolute inset-0 -z-10 bg-linear-to-br",
             project.bgColor || "from-neutral-800 to-neutral-900"
           )} 
         />
@@ -101,18 +102,21 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
 
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center items-end">
           {isMobile ? (
-            <div className="relative w-full max-w-md h-[300px] md:h-[380px]">
+            <div className="relative w-full max-w-md h-75 md:h-95">
               {screenshots[1] && (
                 <motion.div 
                   className="absolute left-4 md:left-8 -bottom-28 w-[38%] z-10 origin-bottom"
                   whileHover={{ x: -20, rotate: -5 }} 
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="relative aspect-[9/19] rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
-                    <img 
-                      src={screenshots[1]} 
-                      alt={`${project.title} screen 2`} 
-                      className="w-full h-full object-cover object-top opacity-60" 
+                  <div className="relative aspect-9/19 rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
+                    <Image
+                      src={screenshots[1]}
+                      alt={`${project.title} screen 2`}
+                      fill
+                      className="object-cover object-top opacity-60"
+                      sizes="(max-width: 768px) 100vw, 38vw"
+                      priority={index === 1}
                     />
                   </div>
                 </motion.div>
@@ -123,11 +127,14 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                   whileHover={{ x: 20, rotate: 5 }} 
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="relative aspect-[9/19] rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
-                    <img 
-                      src={screenshots[2]} 
-                      alt={`${project.title} screen 3`} 
-                      className="w-full h-full object-cover object-top opacity-60" 
+                  <div className="relative aspect-9/19 rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
+                    <Image
+                      src={screenshots[2]}
+                      alt={`${project.title} screen 3`}
+                      fill
+                      className="object-cover object-top opacity-60"
+                      sizes="(max-width: 768px) 100vw, 38vw"
+                      priority={index === 2}
                     />
                   </div>
                 </motion.div>
@@ -137,12 +144,15 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                 whileHover={{ scale: 1.1 }} 
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <div className="relative aspect-[9/19] rounded-t-3xl border-x-[6px] border-t-[6px] border-neutral-900 bg-neutral-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
+                <div className="relative aspect-9/19 rounded-t-3xl border-x-[6px] border-t-[6px] border-neutral-900 bg-neutral-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-5 bg-black rounded-b-xl z-30" />
-                  <img 
-                    src={screenshots[0]} 
-                    alt={`${project.title} main screen`} 
-                    className="w-full h-full object-cover object-top" 
+                  <Image
+                    src={screenshots[0]}
+                    alt={`${project.title} main screen`}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 768px) 100vw, 45vw"
+                    priority={index === 0}
                   />
                 </div>
               </motion.div>
@@ -153,7 +163,7 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <div className="relative aspect-[16/12] rounded-t-xl bg-neutral-900 border-x border-t border-white/10 overflow-hidden shadow-2xl flex flex-col">
+              <div className="relative aspect-16/12 rounded-t-xl bg-neutral-900 border-x border-t border-white/10 overflow-hidden shadow-2xl flex flex-col">
                 <div className="h-7 bg-neutral-800/90 flex items-center gap-1.5 px-4 border-b border-white/5 z-20 shrink-0">
                   <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
                   <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
@@ -162,10 +172,13 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
 
                 <div className="relative flex-1 w-full bg-neutral-900">
                   {screenshots[0] ? (
-                    <img 
-                      src={screenshots[0]} 
-                      alt={`${project.title} screenshot`} 
-                      className="absolute inset-0 w-full h-full object-cover object-top" 
+                    <Image
+                      src={screenshots[0]}
+                      alt={`${project.title} screenshot`}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 100vw, 82vw"
+                      priority={index === 0}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-white/20 text-2xl font-bold">

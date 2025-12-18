@@ -95,8 +95,7 @@ export default function Projects() {
             transition={{ delay: 0.3 }}
             className="mt-8 text-xl sm:text-2xl text-muted leading-relaxed font-light max-w-3xl mx-auto"
           >
-            A curated selection of projects showcasing my expertise in fullstack
-            development, computer vision, and mobile applications.
+            A curated selection of projects that made me confident in building software.
           </motion.p>
         </motion.div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface DeviceMockupProps {
   type: "desktop" | "mobile";
@@ -24,7 +25,7 @@ export function DeviceMockup({
   if (type === "mobile") {
     return (
       <div className={cn("relative mx-auto", className)}>
-        <div className="relative w-full max-w-[280px] mx-auto">
+        <div className="relative w-full max-w-70 mx-auto">
           <div
             className={cn(
               "relative rounded-[2.5rem] border-8 overflow-hidden",
@@ -42,10 +43,13 @@ export function DeviceMockup({
 
             <div className={cn("relative w-full", aspectClass)}>
               {imageSrc ? (
-                <img
+                <Image
                   src={imageSrc}
                   alt={imageAlt}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 280px"
+                  priority
                 />
               ) : (
                 <div
@@ -84,10 +88,13 @@ export function DeviceMockup({
         >
           <div className={cn("relative w-full", aspectClass)}>
             {imageSrc ? (
-              <img
+              <Image
                 src={imageSrc}
                 alt={imageAlt}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 400px"
+                priority
               />
             ) : (
               <div

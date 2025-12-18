@@ -63,7 +63,7 @@ export default function Navbar() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out py-6"
       )}
     >
-      <nav className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
+      <nav className="max-w-350 mx-auto px-6 md:px-8 lg:px-12">
         <div className="flex items-center justify-between">
           <ThemeToggle />
           <div className="flex items-center gap-1 glass-strong rounded-full shadow-xl shadow-black/10" style={{ padding: "16px 32px" }}>
