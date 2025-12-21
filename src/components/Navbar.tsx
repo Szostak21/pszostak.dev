@@ -79,14 +79,21 @@ export default function Navbar() {
       }
       return;
     }
-    // Home link scrolls to top
+    // Home link scrolls to top on home page
     if (item.href === '/' && isHomePage) {
       e.preventDefault();
       setMobileMenuOpen(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    // For other pages, allow default navigation
+    // When clicking a section link from other pages, navigate to home WITHOUT hash
+    if (item.href.startsWith('/#') && !isHomePage) {
+      e.preventDefault();
+      setMobileMenuOpen(false);
+      router.push('/');
+      return;
+    }
+    // For other cases, allow default navigation
     setMobileMenuOpen(false);
   };
 
@@ -115,12 +122,12 @@ export default function Navbar() {
                   className={cn(
                     "relative text-sm font-semibold rounded-full transition-all duration-300 cursor-pointer flex items-center"
                   )}
-                  style={{ 
-                    padding: "10px 24px",
-                    color: activeSection === item.section ? 'var(--foreground)' : 'var(--muted)'
-                  }}
+                    style={{ 
+                      padding: "10px 24px",
+                      color: isHomePage && activeSection === item.section ? 'var(--foreground)' : 'var(--muted)'
+                    }}
                 >
-                  {activeSection === item.section && (
+                    {isHomePage && activeSection === item.section && (
                     <motion.span
                       layoutId="navbar-indicator"
                       className="absolute inset-0 rounded-full"
@@ -224,12 +231,12 @@ export default function Navbar() {
                     className={cn(
                       "relative text-sm font-semibold rounded-full transition-all duration-300 cursor-pointer text-center"
                     )}
-                    style={{ 
-                      padding: "12px 24px",
-                      color: activeSection === item.section ? 'var(--foreground)' : 'var(--muted)',
-                      background: activeSection === item.section ? 'var(--accent)' : 'transparent',
-                      opacity: activeSection === item.section ? 1 : 0.8
-                    }}
+                      style={{ 
+                        padding: "12px 24px",
+                        color: isHomePage && activeSection === item.section ? 'var(--foreground)' : 'var(--muted)',
+                        background: isHomePage && activeSection === item.section ? 'var(--accent)' : 'transparent',
+                        opacity: isHomePage && activeSection === item.section ? 1 : 0.8
+                      }}
                   >
                     {item.label}
                   </a>
