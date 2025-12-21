@@ -33,7 +33,7 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         isLarge ? "md:col-span-2" : ""
       )}
     >
-      <header className="mb-6">
+      <header className="mb-3 md:mb-6">
         <div className="flex items-center gap-3 mb-3">
           <span className="text-sm font-mono tracking-wider uppercase text-[var(--muted)]">
             0{index + 1}
@@ -46,11 +46,11 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         <div className="flex items-center justify-between gap-4">
           <h3 className={cn(
             "font-bold tracking-tight text-[var(--foreground)]",
-            isLarge ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl"
+            isLarge ? "text-3xl md:text-5xl" : "text-2xl md:text-4xl"
           )}>
             {project.title}
           </h3>
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {project.github && (
               <a 
                 href={project.github} 
@@ -81,7 +81,8 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         className={cn(
           "relative overflow-hidden rounded-3xl",
           "border border-white/5",
-          isLarge ? "min-h-150" : "min-h-120"
+          // --- ZMIANA 1: Zmniejszona minimalna wysokość na mobile ---
+          isLarge ? "min-h-[450px] md:min-h-150" : "min-h-[380px] md:min-h-120"
         )}
       >
         <div 
@@ -91,10 +92,10 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
           )} 
         />
 
-        <div className="relative z-20 px-8 pt-8 pb-6 md:px-12 md:pt-10 md:pb-8">
+        <div className="relative z-20 px-6 pt-6 pb-2 md:px-12 md:pt-10 md:pb-8">
           <p className={cn(
             "text-white/90 leading-relaxed font-medium text-balance max-w-2xl drop-shadow-sm",
-            isLarge ? "text-xl md:text-2xl" : "text-lg md:text-xl"
+            isLarge ? "text-lg md:text-2xl" : "text-base md:text-xl"
           )}>
             {project.description}
           </p>
@@ -102,14 +103,15 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
 
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center items-end">
           {isMobile ? (
-            <div className="relative w-full max-w-md h-75 md:h-95">
+            // --- ZMIANA 2: Zmniejszona wysokość kontenera na screeny mobilne na telefonie (h-60 zamiast h-75) ---
+            <div className="relative w-full max-w-md h-60 md:h-95">
               {screenshots[1] && (
                 <motion.div 
-                  className="absolute left-4 md:left-8 -bottom-28 w-[38%] z-10 origin-bottom"
+                  className="absolute left-4 md:left-8 -bottom-24 md:-bottom-28 w-[38%] z-10 origin-bottom"
                   whileHover={{ x: -20, rotate: -5 }} 
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="relative aspect-9/19 rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
+                  <div className="relative aspect-9/19 rounded-t-2xl md:rounded-t-3xl border-x-2 md:border-x-4 border-t-2 md:border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
                     <Image
                       src={screenshots[1]}
                       alt={`${project.title} screen 2`}
@@ -123,11 +125,11 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
               )}
               {screenshots[2] && (
                 <motion.div 
-                  className="absolute right-4 md:right-8 -bottom-28 w-[38%] z-10 origin-bottom"
+                  className="absolute right-4 md:right-8 -bottom-24 md:-bottom-28 w-[38%] z-10 origin-bottom"
                   whileHover={{ x: 20, rotate: 5 }} 
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="relative aspect-9/19 rounded-t-3xl border-x-4 border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
+                  <div className="relative aspect-9/19 rounded-t-2xl md:rounded-t-3xl border-x-2 md:border-x-4 border-t-2 md:border-t-4 border-neutral-800 bg-black overflow-hidden shadow-2xl">
                     <Image
                       src={screenshots[2]}
                       alt={`${project.title} screen 3`}
@@ -140,12 +142,12 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                 </motion.div>
               )}
               <motion.div 
-                className="absolute left-1/2 -translate-x-1/2 -bottom-28 w-[45%] z-20 origin-bottom"
+                className="absolute left-1/2 -translate-x-1/2 -bottom-24 md:-bottom-28 w-[45%] z-20 origin-bottom"
                 whileHover={{ scale: 1.1 }} 
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <div className="relative aspect-9/19 rounded-t-3xl border-x-[6px] border-t-[6px] border-neutral-900 bg-neutral-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-5 bg-black rounded-b-xl z-30" />
+                <div className="relative aspect-9/19 rounded-t-2xl md:rounded-t-3xl border-x-[4px] md:border-x-[6px] border-t-[4px] md:border-t-[6px] border-neutral-900 bg-neutral-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-3 md:h-5 bg-black rounded-b-lg md:rounded-b-xl z-30" />
                   <Image
                     src={screenshots[0]}
                     alt={`${project.title} main screen`}
@@ -159,15 +161,15 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
             </div>
           ) : (
             <motion.div
-              className="w-[88%] md:w-[82%] origin-bottom"
+              className="w-[92%] md:w-[82%] origin-bottom"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <div className="relative aspect-16/12 rounded-t-xl bg-neutral-900 border-x border-t border-white/10 overflow-hidden shadow-2xl flex flex-col">
-                <div className="h-7 bg-neutral-800/90 flex items-center gap-1.5 px-4 border-b border-white/5 z-20 shrink-0">
-                  <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                  <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                  <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+              <div className="relative aspect-16/12 rounded-t-lg md:rounded-t-xl bg-neutral-900 border-x border-t border-white/10 overflow-hidden shadow-2xl flex flex-col">
+                <div className="h-5 md:h-7 bg-neutral-800/90 flex items-center gap-1 md:gap-1.5 px-3 md:px-4 border-b border-white/5 z-20 shrink-0">
+                  <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#FF5F57]" />
+                  <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#FEBC2E]" />
+                  <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#28C840]" />
                 </div>
 
                 <div className="relative flex-1 w-full bg-neutral-900">
@@ -181,7 +183,7 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
                       priority={index === 0}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/20 text-2xl font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-white/20 text-xl md:text-2xl font-bold">
                       Preview
                     </div>
                   )}
@@ -192,11 +194,11 @@ export function ProjectCard({ project, index, variant = "standard" }: ProjectCar
         </div>
       </div>
 
-      <footer className="flex flex-wrap gap-2 mt-6">
+      <footer className="flex flex-wrap gap-2 mt-4 md:mt-6">
         {project.tags.map((tag) => (
           <span 
             key={tag} 
-            className="px-4 py-2 text-xs font-bold rounded-full uppercase tracking-wider bg-[var(--card)] border border-[var(--card-border)] text-[var(--muted)]"
+            className="px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs font-bold rounded-full uppercase tracking-wider bg-[var(--card)] border border-[var(--card-border)] text-[var(--muted)]"
           >
             {tag}
           </span>

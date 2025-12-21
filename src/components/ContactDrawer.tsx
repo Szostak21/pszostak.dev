@@ -35,9 +35,7 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
         <Drawer.Content
           className={cn(
             "fixed z-50 outline-none flex flex-col overflow-hidden shadow-2xl transition-all duration-300 border",
-            // --- Mobile ---
             "bottom-0 inset-x-0 rounded-t-[32px] rounded-b-none h-fit max-h-[96vh] border-t pb-[env(safe-area-inset-bottom)]",
-            // --- Desktop ---
             "sm:bottom-0 sm:mx-auto sm:max-w-lg sm:border-x"
           )}
           style={{
@@ -51,7 +49,6 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
           <div className="px-6 sm:px-10 pb-8 pt-2 overflow-hidden">
             <AnimatePresence mode="wait" initial={false}>
               
-              {/* KROK 1: MENU GŁÓWNE */}
               {step === "menu" && (
                 <motion.div
                   key="menu"
@@ -75,7 +72,6 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
                     {/* Przycisk Kalendarza */}
                     <button
                       onClick={() => {
-                        // Close drawer then navigate to booking page
                         onOpenChange(false);
                         router.push('/book-call');
                       }}
@@ -122,7 +118,6 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
                 </motion.div>
               )}
 
-              {/* KROK 2: KALENDARZ */}
               {step === "booking" && (
                 <motion.div
                   key="booking"
