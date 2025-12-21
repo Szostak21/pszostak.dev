@@ -3,7 +3,7 @@ import { ConversationalHero } from "@/components/hero";
 import Projects from "@/sections/Projects";
 import Skills from "@/sections/Skills";
 import About from "@/sections/About";
-import Contact from "@/sections/Contact";
+import Other from "@/sections/Other";
 import { siteConfig } from "@/data/config";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
         <Projects />
         <Skills />
         <About />
-        <Contact />
+        <Other />
       </main>
     </>
   );

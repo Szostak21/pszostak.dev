@@ -73,10 +73,13 @@ export function ConversationalHero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight"
-            style={{ fontSize: '300%' }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight"
+            style={{ fontSize: '300%', color: 'var(--foreground)' }}
           >
-            Hi, I&apos;m {portfolioContext.name}
+            Hi, I&apos;m{' '}
+            <span className="gradient-text bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-end)]">
+              {portfolioContext.name}
+            </span>
           </motion.h1>
 
         </div>
