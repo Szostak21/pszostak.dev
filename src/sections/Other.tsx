@@ -56,15 +56,12 @@ export default function Other() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {otherItems.map((item, index) => (
+          {otherItems.map((item) => (
             <motion.a
               key={item.title}
               href={item.href}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
               className="group relative p-8 rounded-3xl glass hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden"
+              whileHover={{ scale: 1.05 }}
             >
               {/* Gradient background on hover */}
               <div 
@@ -73,15 +70,15 @@ export default function Other() {
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
                 <div 
-                  className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} p-0.5 group-hover:scale-110 transition-transform duration-300`}
+                  className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} p-0.5 transition-transform duration-300`}
                 >
                   <div className="w-full h-full rounded-2xl bg-[var(--background)] flex items-center justify-center">
-                    <item.icon size={32} className="text-white" />
+                    <item.icon size={32} style={{ color: 'var(--foreground)' }} />
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className={`text-2xl font-bold mb-2 transition-colors group-hover:bg-gradient-to-br ${item.color} group-hover:bg-clip-text group-hover:text-transparent`}>
+                  <h3 className={`text-2xl font-bold mb-2 transition-colors bg-gradient-to-br ${item.color} bg-clip-text text-transparent`}>
                     {item.title}
                   </h3>
                   <p className="text-[var(--muted)] text-sm">

@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
-  ArrowLeft, Clock, Globe, Video, CheckSquare, 
+  Clock, Globe, Video, CheckSquare, 
   ChevronLeft, ChevronRight, User, Loader2
 } from "lucide-react";
 import { siteConfig } from "@/data/config";
@@ -124,18 +123,14 @@ export default function BookCall() {
       <Toaster 
         position="top-center" 
         toastOptions={{
-          style: {
-            background: '#0a0a0a',
-            border: '1px solid rgba(255,255,255,0.1)',
-            color: '#fff',
-          },
+          className: 'toast-theme',
         }}
       />
       <Head>
         <title>Book a Call | {siteConfig.name}</title>
       </Head>
 
-      <main className="min-h-screen pb-16 px-4 bg-[#030303]" style={{ paddingTop: '120px' }}>
+      <main className="min-h-screen pb-16 px-4" style={{ paddingTop: '120px', backgroundColor: 'var(--background)' }}>
         <div className="max-w-6xl mx-auto">
           
           {/* Return Home Link removed - intentional for streamlined header */}
@@ -146,10 +141,10 @@ export default function BookCall() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+<h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ color: 'var(--foreground)' }}>
               Let&apos;s bring your <span className="gradient-text">ideas</span> to life
             </h1>
-            <p className="text-xs sm:text-sm text-white/30 max-w-none sm:max-w-2xl mx-auto font-medium tracking-wide">
+            <p className="text-xs sm:text-sm max-w-none sm:max-w-2xl mx-auto font-medium tracking-wide" style={{ color: 'var(--muted)' }}>
               Select a date and time below to schedule our call.
             </p>
           </motion.div>
@@ -157,19 +152,23 @@ export default function BookCall() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-neutral-900/40 backdrop-blur-xl border border-white/5 rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-2xl"
+            className="backdrop-blur-xl border rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-2xl glass-strong"
+            style={{
+              backgroundColor: 'var(--card)',
+              borderColor: 'var(--card-border)'
+            }}
           >
             <div className="grid grid-cols-1 lg:grid-cols-12">
               
               {/* 1. LEFT COLUMN: Session Details */}
-              <div className="lg:col-span-3 p-6 sm:p-8 lg:border-r border-white/5 bg-white/[0.01]">
+              <div className="lg:col-span-3 p-6 sm:p-8 lg:border-r" style={{ borderColor: 'var(--card-border)', backgroundColor: 'var(--card)' }}>
                 <div className="flex flex-col gap-8 lg:gap-10">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                       <User size={14} className="text-white/30" />
+                    <div className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--card-border)', opacity: 0.8 }}>
+                       <User size={14} style={{ color: 'var(--muted)' }} />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[11px] font-bold text-white tracking-tight uppercase leading-tight">
+                      <p className="text-[11px] font-bold tracking-tight uppercase leading-tight" style={{ color: 'var(--foreground)' }}>
                         Paweł Szostak
                       </p>
                     </div>
@@ -185,21 +184,27 @@ export default function BookCall() {
               </div>
 
               {/* 2. CENTER COLUMN: Calendar Grid */}
-              <div className="lg:col-span-5 p-6 sm:p-8 border-b lg:border-b-0 lg:border-r border-white/5">
+              <div className="lg:col-span-5 p-6 sm:p-8 border-b lg:border-b-0 lg:border-r" style={{ borderColor: 'var(--card-border)' }}>
                 <div className="flex items-center justify-between mb-8 sm:mb-10">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-widest">
-                    {monthNames[currentMonth]} <span className="text-white/20">{currentYear}</span>
+                  <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--foreground)' }}>
+                    {monthNames[currentMonth]} <span style={{ color: 'var(--muted)' }}>{currentYear}</span>
                   </h3>
                   <div className="flex gap-2">
                     <button 
                       onClick={handlePrevMonth}
-                      className="p-2 text-white/20 hover:text-white transition-colors"
+                      className="p-2 transition-colors"
+                      style={{ color: 'var(--muted)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--foreground)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
                     >
                       <ChevronLeft size={18}/>
                     </button>
                     <button 
                       onClick={handleNextMonth}
-                      className="p-2 text-white/20 hover:text-white transition-colors"
+                      className="p-2 transition-colors"
+                      style={{ color: 'var(--muted)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--foreground)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
                     >
                       <ChevronRight size={18}/>
                     </button>
@@ -208,7 +213,7 @@ export default function BookCall() {
 
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
-                    <div key={`${day}-${idx}`} className="text-[9px] font-bold text-white/10 pb-4 sm:pb-6 tracking-widest">{day}</div>
+                    <div key={`${day}-${idx}`} className="text-[9px] font-bold pb-4 sm:pb-6 tracking-widest" style={{ color: 'var(--muted)', opacity: 0.5 }}>{day}</div>
                   ))}
                   {/* Empty cells for days before the 1st */}
                   {[...Array(getFirstDayOfMonth(currentMonth, currentYear))].map((_, i) => (
@@ -221,10 +226,24 @@ export default function BookCall() {
                       onClick={() => setSelectedDate(day)}
                       className={cn(
                         "aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl text-xs font-semibold transition-all outline-none",
-                        selectedDate === day 
-                          ? "bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.15)] scale-105" 
-                          : "text-white/40 hover:bg-white/5 hover:text-white"
+                        selectedDate === day && "scale-105 shadow-lg"
                       )}
+                      style={{
+                        backgroundColor: selectedDate === day ? 'var(--accent)' : 'transparent',
+                        color: selectedDate === day ? 'white' : 'var(--muted)'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedDate !== day) {
+                          e.currentTarget.style.backgroundColor = 'var(--card)';
+                          e.currentTarget.style.color = 'var(--foreground)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedDate !== day) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = 'var(--muted)';
+                        }
+                      }}
                     >
                       {day}
                     </button>
@@ -233,12 +252,12 @@ export default function BookCall() {
               </div>
 
               {/* 3. RIGHT COLUMN: Time Slots */}
-              <div className="lg:col-span-4 p-6 sm:p-8 bg-white/[0.01]">
+              <div className="lg:col-span-4 p-6 sm:p-8" style={{ backgroundColor: 'var(--card)' }}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h3 className="text-[10px] font-bold text-white uppercase tracking-widest">Available Slots</h3>
-                  <div className="flex p-0.5 bg-white/5 rounded-lg border border-white/10">
-                    <button onClick={() => setTimeFormat("24")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded", timeFormat === "24" ? "bg-white/10 text-white" : "text-white/20")}>24H</button>
-                    <button onClick={() => setTimeFormat("12")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded", timeFormat === "12" ? "bg-white/10 text-white" : "text-white/20")}>12H</button>
+                  <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--foreground)' }}>Available Slots</h3>
+                  <div className="flex p-0.5 rounded-lg border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--card-border)', opacity: 0.8 }}>
+                    <button onClick={() => setTimeFormat("24")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "24" ? 'var(--accent)' : 'transparent', color: timeFormat === "24" ? 'white' : 'var(--muted)', opacity: timeFormat === "24" ? 0.3 : 1 }}>24H</button>
+                    <button onClick={() => setTimeFormat("12")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "12" ? 'var(--accent)' : 'transparent', color: timeFormat === "12" ? 'white' : 'var(--muted)', opacity: timeFormat === "12" ? 0.3 : 1 }}>12H</button>
                   </div>
                 </div>
 
@@ -258,11 +277,25 @@ export default function BookCall() {
                         key={time}
                         onClick={() => setSelectedTime(time)}
                         className={cn(
-                          "w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl border transition-all text-xs font-bold outline-none",
-                          selectedTime === time 
-                            ? "bg-white border-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
-                            : "border-white/5 bg-white/[0.02] text-white/50 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
+                          "w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl border transition-all text-xs font-bold outline-none shadow-sm"
                         )}
+                        style={{
+                          backgroundColor: selectedTime === time ? 'var(--accent)' : 'var(--card)',
+                          borderColor: selectedTime === time ? 'var(--accent)' : 'var(--card-border)',
+                          color: selectedTime === time ? 'white' : 'var(--muted)'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (selectedTime !== time) {
+                            e.currentTarget.style.borderColor = 'var(--accent)';
+                            e.currentTarget.style.color = 'var(--foreground)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (selectedTime !== time) {
+                            e.currentTarget.style.borderColor = 'var(--card-border)';
+                            e.currentTarget.style.color = 'var(--muted)';
+                          }
+                        }}
                       >
                         {displayTime}
                       </button>
@@ -273,27 +306,41 @@ export default function BookCall() {
             </div>
 
             {/* 4. BOTTOM SECTION: Form */}
-            <div className="p-6 sm:p-8 lg:p-12 border-t border-white/5 bg-white/[0.01]">
+            <div className="p-6 sm:p-8 lg:p-12 border-t" style={{ borderColor: 'var(--card-border)', backgroundColor: 'var(--card)' }}>
               <div className="max-w-2xl space-y-6 sm:space-y-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] ml-1">Full Name</label>
+                    <label className="text-[9px] font-bold uppercase tracking-[0.2em] ml-1" style={{ color: 'var(--muted)' }}>Full Name</label>
                     <input 
                       type="text" 
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="John Smith" 
-                      className="w-full bg-white/[0.02] border border-white/5 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-white text-xs outline-none focus:border-white/20 transition-all placeholder:text-white/10" 
+                      className="w-full border rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-xs outline-none transition-all" 
+                      style={{
+                        backgroundColor: 'var(--card)',
+                        borderColor: 'var(--card-border)',
+                        color: 'var(--foreground)'
+                      }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = 'var(--card-border)'}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] ml-1">Email Address</label>
+                    <label className="text-[9px] font-bold uppercase tracking-[0.2em] ml-1" style={{ color: 'var(--muted)' }}>Email Address</label>
                     <input 
                       type="email" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="john.smith@example.com" 
-                      className="w-full bg-white/[0.02] border border-white/5 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-white text-xs outline-none focus:border-white/20 transition-all placeholder:text-white/10" 
+                      className="w-full border rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-xs outline-none transition-all" 
+                      style={{
+                        backgroundColor: 'var(--card)',
+                        borderColor: 'var(--card-border)',
+                        color: 'var(--foreground)'
+                      }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = 'var(--card-border)'}
                     />
                   </div>
                 </div>
@@ -301,11 +348,14 @@ export default function BookCall() {
                   onClick={handleBooking}
                   disabled={isLoading}
                   className={cn(
-                    "w-full sm:w-fit px-10 sm:px-14 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-xs font-black uppercase tracking-widest transition-all transform active:scale-[0.98]",
-                    isLoading 
-                      ? "bg-white/50 text-black/50 cursor-not-allowed" 
-                      : "bg-white text-black hover:bg-neutral-200 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                    "w-full sm:w-fit px-10 sm:px-14 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-xs font-black uppercase tracking-widest transition-all transform active:scale-[0.98] shadow-lg"
                   )}
+                  style={{
+                    backgroundColor: isLoading ? 'var(--muted)' : 'var(--accent)',
+                    color: 'white',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1
+                  }}
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -323,9 +373,9 @@ export default function BookCall() {
       </main>
 
       <style jsx global>{`
-        body { background-color: #030303; }
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 10px; }
+        .toast-theme { background: var(--card) !important; border: 1px solid var(--card-border) !important; color: var(--foreground) !important; }
       `}</style>
     </>
   );
@@ -333,8 +383,8 @@ export default function BookCall() {
 
 function DetailItem({ icon, text }: { icon: React.ReactNode, text: string }) {
   return (
-    <div className="flex items-center gap-4 text-[11px] font-semibold text-white/30">
-      <span className="text-white/10 shrink-0">{icon}</span>
+    <div className="flex items-center gap-4 text-[11px] font-semibold" style={{ color: 'var(--muted)' }}>
+      <span className="shrink-0" style={{ color: 'var(--muted)', opacity: 0.5 }}>{icon}</span>
       <span className="tracking-tight">{text}</span>
     </div>
   );

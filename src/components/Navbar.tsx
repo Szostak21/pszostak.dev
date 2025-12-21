@@ -98,7 +98,8 @@ export default function Navbar() {
   };
 
   const handleBookCallClick = () => {
-    router.push('/book-call');
+    // Open the contact drawer so user can choose between booking or emailing
+    setContactOpen(true);
     setMobileMenuOpen(false);
   };
 
