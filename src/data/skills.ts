@@ -13,6 +13,10 @@ import {
   SiGithub,
   SiFigma,
   SiVercel,
+  SiCss3,
+  SiCplusplus,
+  SiSpringboot,
+  SiExpo,
 } from "react-icons/si";
 import { IconType } from "react-icons";
 
@@ -24,6 +28,10 @@ export interface Skill {
 
 export const skills: Skill[] = [
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+  { name: "CSS", icon: SiCss3, color: "#1572B6" },
+  { name: "C++", icon: SiCplusplus, color: "#00599C" },
+  { name: "Spring Boot", icon: SiSpringboot, color: "#6DB33F" },
+  { name: "Expo", icon: SiExpo },
   { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
   { name: "React", icon: SiReact, color: "#61DAFB" },
   { name: "Next.js", icon: SiNextdotjs, color: "#ffffff" },
