@@ -92,7 +92,7 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
                       </div>
                       <div>
                         <h4 className="font-bold text-base" style={{ color: 'var(--foreground)' }}>Book a call</h4>
-                        <p className="text-[11px] uppercase tracking-widest font-bold" style={{ color: 'var(--muted)' }}>Schedule time</p>
+                        <p className="text-[11px] uppercase tracking-widest font-bold" style={{ color: 'var(--muted)' }}>30 min call</p>
                       </div>
                     </button>
 
@@ -112,7 +112,7 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
                       </div>
                       <div>
                         <h4 className="font-bold text-base" style={{ color: 'var(--foreground)' }}>Email me</h4>
-                        <p className="text-[11px] uppercase tracking-widest font-bold" style={{ color: 'var(--muted)' }}>Open Gmail/Mail</p>
+                        <p className="text-[11px] uppercase tracking-widest font-bold" style={{ color: 'var(--muted)' }}>Open Gmail</p>
                       </div>
                     </a>
                   </div>
