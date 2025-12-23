@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
-import { FormEvent, useRef, useEffect } from "react";
+import { FormEvent, useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
@@ -27,73 +27,64 @@ export function ChatInput({
   className,
 }: ChatInputProps) {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    window.requestAnimationFrame(() => setIsMounted(true));
+    const timer = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSuggestedClick = (question: string) => {
     let autofill = question;
     const q = question.trim().toLowerCase();
-    if (q === "skills") {
-      autofill = "What programming skills do you have?";
-    } else if (q === "projects") {
-      autofill = "Can you show me your projects?";
-    } else if (q === "about me") {
-      autofill = "Tell me about yourself.";
-    }
+    if (q === "skills") autofill = "What programming skills do you have?";
+    else if (q === "projects") autofill = "Can you show me your projects?";
+    else if (q === "about me") autofill = "Tell me about yourself.";
+    
     setInput(autofill);
     onSuggestedClick?.(autofill);
     inputRef.current?.focus();
   };
 
+  if (!isMounted) return null;
+
   return (
     <div className={cn("flex flex-col", className)}>
+      {/* Sugestie pytań */}
       {showSuggestions && suggestedQuestions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-wrap gap-2 justify-center"
-          style={{ marginBottom: "1rem", marginTop: "0rem" }}
-        >
-          {suggestedQuestions.map((question, index) => (
-            <motion.button
+        <div className="flex flex-wrap gap-1.5 justify-center mb-3">
+          {suggestedQuestions.map((question) => (
+            <button
               key={question}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
               onClick={() => handleSuggestedClick(question)}
               disabled={isLoading}
               className={cn(
-                "text-sm rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                "text-xs rounded-full border px-3 py-1 transition-all disabled:opacity-50",
+                "hover:brightness-125 active:scale-95"
               )}
               style={{
-                padding: "8px 16px",
-                background: 'var(--card)',
-                border: '1px solid var(--card-border)',
+                backgroundColor: 'var(--card)',
+                borderColor: 'var(--card-border)',
                 color: 'var(--muted)',
-                cursor: isLoading ? 'not-allowed' : 'pointer'
               }}
-              onMouseEnter={e => e.currentTarget.style.background = 'var(--accent)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'var(--card)'}
             >
               {question}
-            </motion.button>
+            </button>
           ))}
-        </motion.div>
+        </div>
       )}
 
-      <form onSubmit={onSubmit} className="relative group mt-4 mb-4">
+      {/* Główny Input */}
+      <form onSubmit={onSubmit} className="relative">
         <div
           className={cn(
-            "flex gap-3 items-center justify-center rounded-4xl transition-all duration-300 ease-out",
-            "focus-within:shadow-[0_0_30px_-10px_rgba(139,92,246,0.3)]"
+            "flex items-center gap-2 rounded-full border transition-all px-4 py-1.5"
+            // USUNIĘTO: focus-within:ring oraz focus-within:border-violet-500
           )}
           style={{
-            padding: "0.25em 0.75em",
-            minHeight: "2.2em",
-            background: 'var(--card)',
-            border: '1px solid var(--card-border)'
+            backgroundColor: 'var(--card)',
+            borderColor: 'var(--card-border)',
           }}
         >
           <textarea
@@ -103,50 +94,38 @@ export function ChatInput({
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                if (input.trim()) inputRef.current?.form?.requestSubmit();
+                if (input.trim()) {
+                  const form = e.currentTarget.form;
+                  if (form) form.requestSubmit();
+                }
               }
             }}
             onInput={(e) => {
-              const t = e.currentTarget as HTMLTextAreaElement;
+              const t = e.currentTarget;
               t.style.height = "auto";
-              t.style.height = `${Math.min(t.scrollHeight, 320)}px`;
+              t.style.height = `${Math.min(t.scrollHeight, 120)}px`;
             }}
             rows={1}
-            placeholder="Ask me anything about Paweł..."
+            placeholder="Ask anything about Paweł..."
             disabled={isLoading}
-            aria-label="Chat input"
             className={cn(
-              "flex-1 bg-transparent text-lg leading-relaxed min-h-0 max-h-80 resize-none outline-none disabled:opacity-50"
+              "flex-1 bg-transparent text-sm outline-none resize-none overflow-hidden py-2 leading-tight"
             )}
             style={{
-              paddingTop: 0,
-              paddingBottom: 0,
-              lineHeight: 1.8,
-              height: "1.8em",
-              minHeight: "1.8em",
-              maxHeight: "3.2em",
-              display: "flex",
-              alignItems: "center",
               color: 'var(--foreground)',
-              background: 'transparent'}}
+              appearance: 'none',
+            }}
           />
           
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
             className={cn(
-              "rounded-xl shrink-0 transition-all duration-300 ease-out disabled:opacity-0 disabled:scale-75 disabled:pointer-events-none"
+              "flex items-center justify-center w-8 h-8 rounded-full transition-all shrink-0",
+              "bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-0 disabled:scale-90"
             )}
-            style={{
-              padding: "12px",
-              background: 'var(--accent)',
-              color: 'white',
-              boxShadow: '0 4px 16px 0 var(--accent-hover, #a78bfa)',
-              opacity: !input.trim() || isLoading ? 0 : 1
-            }}
-            aria-label="Send message"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
           </button>
         </div>
       </form>

@@ -112,8 +112,13 @@ export default function Navbar() {
       >
         <nav className="max-w-350 mx-auto px-6 md:px-8 lg:px-12">
           {/* Desktop Layout */}
-          <div className="hidden md:flex items-center justify-between">
-            <ThemeToggle />
+          <div className="hidden md:flex items-center justify-center relative">
+            {/* Theme Toggle - Absolute Left */}
+            <div className="absolute left-0">
+              <ThemeToggle />
+            </div>
+            
+            {/* Centered Navigation */}
             <div className="flex items-center gap-1 glass-strong rounded-full shadow-xl shadow-black/10 h-14" style={{ paddingLeft: "32px", paddingRight: "32px" }}>
               {navItems.map((item) => (
                 <a
@@ -144,22 +149,25 @@ export default function Navbar() {
                 </a>
               ))}
             </div>
-            {/* Book a Call Button - Desktop */}
-            <button
-              onClick={handleBookCallClick}
-              className={cn(
-                "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-all duration-300 hover:scale-105 h-14",
-                contactOpen && "ring-2 ring-(--accent) ring-opacity-50"
-              )}
-              style={{ 
-                paddingLeft: "24px",
-                paddingRight: "24px",
-                color: 'var(--foreground)'
-              }}
-            >
-              <Calendar size={16} />
-              <span>Book a Call</span>
-            </button>
+            
+            {/* Book a Call Button - Absolute Right */}
+            <div className="absolute right-0">
+              <button
+                onClick={handleBookCallClick}
+                className={cn(
+                  "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-all duration-300 hover:scale-105 h-14",
+                  contactOpen && "ring-2 ring-(--accent) ring-opacity-50"
+                )}
+                style={{ 
+                  paddingLeft: "24px",
+                  paddingRight: "24px",
+                  color: 'var(--foreground)'
+                }}
+              >
+                <Calendar size={16} />
+                <span>Book a Call</span>
+              </button>
+            </div>
           </div>
 
           {/* Mobile Layout */}
