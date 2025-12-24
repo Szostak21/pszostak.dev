@@ -16,12 +16,8 @@ export function ConversationalHero() {
   const isLoading = status === "streaming" || status === "submitted";
 
   const getAvatarState = (): AvatarState => {
-    if (status === "streaming") {
-      return "speaking";
-    }
-    if (status === "submitted") {
-      return "thinking";
-    }
+    if (status === "streaming") return "speaking";
+    if (status === "submitted") return "thinking";
     return "idle";
   };
 
@@ -52,11 +48,10 @@ export function ConversationalHero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center px-4 py-20"
+      className="relative min-h-screen flex items-center justify-center px-4"
       style={{ scrollMarginTop: '120px', paddingTop: '6rem', paddingBottom: '8rem' }}
     >
       <div className="absolute inset-0 bg-linear-to-b from-violet-950/20 via-transparent to-transparent pointer-events-none" />
-
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -64,24 +59,22 @@ export function ConversationalHero() {
         transition={{ duration: 0.8 }}
         className="relative z-10 w-full max-w-3xl mx-auto"
       >
-        <div className="text-center mb-10">
-          <div className="flex justify-center mb-8">
+        <div className="text-center mb-4">
+          <div className="flex justify-center mb-2">
             <ReactiveAvatar state={getAvatarState()} />
           </div>
-
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight"
-            style={{ fontSize: '300%', color: 'var(--foreground)' }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-1 tracking-tight"
+            style={{ fontSize: '200%', color: 'var(--foreground)' }}
           >
             Hi, I&apos;m{' '}
             <span className="gradient-text bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-end)]">
               {portfolioContext.name}
             </span>
           </motion.h1>
-
         </div>
 
         <motion.div
@@ -98,10 +91,10 @@ export function ConversationalHero() {
           <ChatHistory
             messages={formattedMessages}
             isLoading={isLoading && formattedMessages[formattedMessages.length - 1]?.role === "user"}
-            className="h-80 sm:h-96 lg:h-80"
+            className="h-72 sm:h-70"
           />
 
-          <div className="h-px bg-white/10" />
+          <div className="h-px" style={{ backgroundColor: 'var(--border-color)' }} />
 
           <div style={{ padding: "16px" }}>
             <ChatInput
@@ -119,16 +112,16 @@ export function ConversationalHero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="flex justify-center mt-12"
+          className="flex justify-center mt-6"
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="flex flex-col items-center gap-2 text-white/30"
+            className="flex flex-col items-center gap-1 text-white/30"
           >
             <span className="text-xs">Scroll to explore</span>
             <svg
-              className="w-5 h-5"
+              className="w-4 h-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
