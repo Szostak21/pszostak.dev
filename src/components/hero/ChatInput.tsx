@@ -39,8 +39,9 @@ export function ChatInput({
     let autofill = question;
     const q = question.trim().toLowerCase();
     if (q === "skills") autofill = "What programming skills do you have?";
-    else if (q === "projects") autofill = "Can you show me your projects?";
+    else if (q === "projects") autofill = "Tell me more about your projects.";
     else if (q === "about me") autofill = "Tell me about yourself.";
+    else if (q === "contact") autofill = "How can I contact you?";
     
     setInput(autofill);
     onSuggestedClick?.(autofill);

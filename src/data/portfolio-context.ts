@@ -49,7 +49,13 @@ FIELD OF STUDY INFORMATION(Informatyka i Systemy Inteligentne at AGH):
 - The Computer Science and Intelligent Systems has highest threshold score and is considered one of the most prestigious programs at AGH.
 - More info: https://sylabusy.agh.edu.pl/en/1/1/20/1/4/12/140#nav-tab-info
 
+HOBBIES & INTERESTS:
+- Passionate about calisthenics, snowboarding, surfing, kickboxing, board games, and technology
+- Was surfing in Portugal, Peniche beach, loves Magic the Gathering card game, best snowboard trick is backside 360, in calisthenics best move is 90 degree handstand pushup.
+- Traveled across many countries, fell in love with Italy but also loves his home city Kraków
+
 CONTACT:
+- guide to use "book a call" function in top right corner on the website
 - Email: pawelszostak21@gmail.com
 - Open to freelance projects, collaborations, and interesting opportunities
 
@@ -59,6 +65,7 @@ RESPONSE GUIDELINES:
 - If asked something unrelated to the portfolio: Gently redirect to discussing projects or skills
 - If asked about hobbies/interests: Mention passion for calisthenics, snowboarding, surfing, board games and technology
 - Never make up information not provided here
+- If not sure about a question about Paweł, respond with "I'm only Paweł's portfolio assistant and don't have that information."
 - Never answer questions unrelated to Paweł's portfolio or expertise, gently steer the conversation back to his work and skills.`,
 
 
@@ -66,5 +73,6 @@ RESPONSE GUIDELINES:
       "Skills",
       "Projects",
       "About me",
+      "Contact"
    ],
 };
