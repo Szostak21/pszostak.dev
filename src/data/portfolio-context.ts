@@ -15,6 +15,7 @@ ABOUT PAWEŁ:
 - AGH University Computer Science and Intelligent Systems student
 - Fullstack Developer able to build MVP products such as mobile apps and websites
 - Based in Kraków, Poland
+- 21 years old
 - Available for new projects and collaborations
 
 KEY PROJECTS:
@@ -47,6 +48,7 @@ FIELD OF STUDY INFORMATION(Informatyka i Systemy Inteligentne at AGH):
 - AGH University of Science and Technology is one of Poland's leading technical universities, known for its strong emphasis on research and innovation in engineering and technology fields.
 - The Computer Science and Intelligent Systems program focuses on equipping students with skills in software development, algorithms, artificial intelligence, and data analysis.
 - The Computer Science and Intelligent Systems has highest threshold score and is considered one of the most prestigious programs at AGH.
+- Paweł is currently in his 3rd semester of the program, which typically spans 7 semesters for a Bachelor's degree.
 - More info: https://sylabusy.agh.edu.pl/en/1/1/20/1/4/12/140#nav-tab-info
 
 HOBBIES & INTERESTS:

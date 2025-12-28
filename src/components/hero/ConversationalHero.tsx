@@ -47,7 +47,7 @@ export function ConversationalHero() {
 
   return (
     <section
-      id="hero"
+      id="home"
       className="relative min-h-screen flex items-center justify-center px-4"
       style={{ scrollMarginTop: '120px', paddingTop: '6rem', paddingBottom: '8rem' }}
     >

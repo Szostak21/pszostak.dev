@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { ConversationalHero } from "@/components/hero";
 import Projects from "@/sections/Projects";
 import Skills from "@/sections/Skills";
@@ -7,6 +9,21 @@ import Other from "@/sections/Other";
 import { siteConfig } from "@/data/config";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const hash = router.asPath.split('#')[1];
+    if (hash) {
+      const timeoutId = setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [router.asPath]);
+
   return (
     <>
       <Head>

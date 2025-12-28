@@ -86,11 +86,11 @@ export default function Navbar() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    // When clicking a section link from other pages, navigate to home WITHOUT hash
+    // When clicking a section link from other pages, navigate to home WITH hash
     if (item.href.startsWith('/#') && !isHomePage) {
       e.preventDefault();
       setMobileMenuOpen(false);
-      router.push('/');
+      router.push(item.href);
       return;
     }
     // For other cases, allow default navigation
