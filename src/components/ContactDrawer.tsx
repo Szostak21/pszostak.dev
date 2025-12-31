@@ -27,7 +27,11 @@ export function ContactDrawer({ open, onOpenChange }: { open: boolean; onOpenCha
   };
 
   return (
-    <Drawer.Root open={open} onOpenChange={handleOpenChange} shouldScaleBackground={false}>
+    <Drawer.Root 
+      open={open} 
+      onOpenChange={handleOpenChange} 
+      shouldScaleBackground={false}
+    >
       <Drawer.Portal>
         {/* Overlay z blurem */}
         <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 transition-opacity duration-300" />

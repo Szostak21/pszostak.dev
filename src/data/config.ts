@@ -25,7 +25,7 @@ export const socials: Social[] = [
   },
   {
     name: "Email",
-    url: "mailto:pawelszostak21@gmail.com",
+    url: "mailto:pszostak.contact@gmail.com",
     icon: Mail,
   },
 ];
@@ -34,7 +34,7 @@ export const siteConfig = {
   name: "Paweł Szostak",
   title: "Full Stack Developer",
   description: "I help founders turn their ideas into reality",
-  email: "pawelszostak21@gmail.com",
+  email: "pszostak.contact@gmail.com",
   location: "Poland",
   available: true,
   calLink: "https://cal.com/yourname",

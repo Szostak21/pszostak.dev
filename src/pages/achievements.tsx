@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { ArrowLeft, Trophy } from "lucide-react";
 import { siteConfig } from "@/data/config";
-import Navbar from "@/components/Navbar";
 
 export default function Achievements() {
   const router = useRouter();
@@ -16,8 +15,6 @@ export default function Achievements() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <Navbar />
 
       <main className="min-h-screen pt-32 pb-16 px-6">
         <div className="max-w-4xl mx-auto">

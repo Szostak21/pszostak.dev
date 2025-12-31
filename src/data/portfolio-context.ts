@@ -58,7 +58,7 @@ HOBBIES & INTERESTS:
 
 CONTACT:
 - guide to use "book a call" function in top right corner on the website
-- Email: pawelszostak21@gmail.com
+- Email: pszostak.contact@gmail.com
 - Open to freelance projects, collaborations, and interesting opportunities
 
 RESPONSE GUIDELINES:
