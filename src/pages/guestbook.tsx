@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MessageSquare, Github, Send, Trash2, Loader2 } from "lucide-react";
+import { ArrowLeft, Github, Send, Trash2, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { siteConfig } from "@/data/config";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -227,11 +227,12 @@ export default function Guestbook() {
             <span className="inline-block text-sm font-semibold tracking-widest text-violet-500 uppercase mb-4">
               The Community Wall
             </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-linear-to-r from-violet-500 via-purple-500 to-fuchsia-500 bg-clip-text text-transparent">
-              Leave Your Mark
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+              <span className="text-(--foreground)">Leave Your</span>{" "}
+              <span className="gradient-text">Mark</span>
             </h1>
             <p className="text-lg sm:text-xl text-(--muted) max-w-2xl mx-auto">
-              Sign the guestbook and join the wall. Share your thoughts, feedback, or just say hi!
+              Share your thoughts, feedback, or just say hi!
             </p>
           </motion.div>
 
@@ -243,12 +244,7 @@ export default function Guestbook() {
             className="mb-12"
           >
             <div className="guestbook-input-card rounded-3xl p-6 sm:p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <MessageSquare className="text-violet-500" size={24} />
-                <h3 className="text-xl font-semibold italic text-(--muted)">
-                  &ldquo;Join the wall...&rdquo;
-                </h3>
-              </div>
+              
 
               {status === "loading" ? (
                 <div className="flex items-center justify-center py-8">
@@ -341,7 +337,6 @@ export default function Guestbook() {
                 transition={{ duration: 0.5 }}
                 className="guestbook-card rounded-3xl p-12 text-center"
               >
-                <MessageSquare size={64} className="text-violet-500 mx-auto mb-4 opacity-50" />
                 <h3 className="text-2xl font-bold mb-2">Be the first!</h3>
                 <p className="text-(--muted) max-w-md mx-auto">
                   No messages yet. Sign in and leave the first message on the wall!
