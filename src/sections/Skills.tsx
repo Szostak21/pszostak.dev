@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { skills } from "@/data/skills";
-import { cn } from "@/lib/utils";
 
 export default function Skills() {
   return (

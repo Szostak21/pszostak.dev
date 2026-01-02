@@ -1,30 +1,98 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import { 
   Clock, Globe, Video, CheckSquare, 
-  ChevronLeft, ChevronRight, User, Loader2
+  ChevronLeft, ChevronRight, User, Loader2, AlertCircle, CalendarX
 } from "lucide-react";
 import { siteConfig } from "@/data/config";
 import { cn } from "@/lib/utils";
 import { toast, Toaster } from "sonner";
+import { MAX_BOOKING_DAYS_AHEAD } from "@/config/availability";
+import { formatTime12h, formatDateKey, getNowInTimezone } from "@/lib/date-utils";
+import type { AvailableSlotsResponse } from "@/pages/api/slots";
 
 export default function BookCall() {
-  const [selectedDate, setSelectedDate] = useState<number | null>(null);
+  // Mounted state to prevent hydration errors
+  const [mounted, setMounted] = useState(false);
+  
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [timeFormat, setTimeFormat] = useState<"12" | "24">("24");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(11); // December (0-indexed)
+  const [isFetchingSlots, setIsFetchingSlots] = useState(false);
+  
+  // Available slots for selected date
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [slotsError, setSlotsError] = useState<string | null>(null);
+  const [isWeekend, setIsWeekend] = useState(false);
+  
+  // Calendar state - initialized after mount to prevent hydration mismatch
+  const [currentMonth, setCurrentMonth] = useState(0);
   const [currentYear, setCurrentYear] = useState(2025);
 
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   
   const getDaysInMonth = (month: number, year: number) => new Date(year, month + 1, 0).getDate();
-  const getFirstDayOfMonth = (month: number, year: number) => new Date(year, month, 1).getDay();
+  
+  const getFirstDayOfMonth = (month: number, year: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    return firstDay === 0 ? 6 : firstDay - 1;
+  };
+
+  // Initialize calendar to current month after mount
+  useEffect(() => {
+    const now = getNowInTimezone();
+    setCurrentMonth(now.getMonth());
+    setCurrentYear(now.getFullYear());
+    setMounted(true);
+  }, []);
+
+  // Fetch available slots when date changes
+  const fetchAvailableSlots = useCallback(async (date: Date) => {
+    setIsFetchingSlots(true);
+    setSlotsError(null);
+    setAvailableSlots([]);
+    
+    const dateKey = formatDateKey(date);
+    
+    try {
+      const response = await fetch(`/api/slots?date=${dateKey}`);
+      const data: AvailableSlotsResponse = await response.json();
+      
+      if (data.error) {
+        setSlotsError(data.error);
+        return;
+      }
+      
+      setIsWeekend(data.isWeekend);
+      setAvailableSlots(data.slots);
+      
+      // If previously selected time is no longer available, clear it
+      if (selectedTime && !data.slots.includes(selectedTime)) {
+        setSelectedTime(null);
+      }
+    } catch (error) {
+      setSlotsError("Failed to load available times. Please try again.");
+      console.error("Error fetching slots:", error);
+    } finally {
+      setIsFetchingSlots(false);
+    }
+  }, [selectedTime]);
+
+  // Fetch slots when selected date changes
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots(selectedDate);
+    } else {
+      setAvailableSlots([]);
+      setSlotsError(null);
+    }
+  }, [selectedDate, fetchAvailableSlots]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -34,6 +102,7 @@ export default function BookCall() {
       setCurrentMonth(currentMonth - 1);
     }
     setSelectedDate(null);
+    setSelectedTime(null);
   };
 
   const handleNextMonth = () => {
@@ -44,11 +113,41 @@ export default function BookCall() {
       setCurrentMonth(currentMonth + 1);
     }
     setSelectedDate(null);
+    setSelectedTime(null);
+  };
+
+  const handleDateSelect = (day: number) => {
+    const newDate = new Date(currentYear, currentMonth, day);
+    setSelectedDate(newDate);
+    setSelectedTime(null);
   };
 
   const formatDateString = () => {
     if (!selectedDate) return "";
-    return `${monthNames[currentMonth]} ${selectedDate}, ${currentYear}`;
+    return selectedDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  // Check if a day is selectable (not in the past, not too far in future)
+  const isDaySelectable = (day: number): boolean => {
+    if (!mounted) return false;
+    
+    const now = getNowInTimezone();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const targetDate = new Date(currentYear, currentMonth, day);
+    const diffDays = Math.floor((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    return diffDays >= 0 && diffDays <= MAX_BOOKING_DAYS_AHEAD;
+  };
+
+  // Check if a day is Sunday (the only day off)
+  const isDaySunday = (day: number): boolean => {
+    const date = new Date(currentYear, currentMonth, day);
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 0; // Only Sunday is off
   };
 
   const handleBooking = async () => {
@@ -78,13 +177,15 @@ export default function BookCall() {
     setIsLoading(true);
 
     try {
+      const dateKey = formatDateKey(selectedDate);
+      
       const response = await fetch("/api/book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
-          date: formatDateString(),
+          date: dateKey,
           time: selectedTime,
         }),
       });
@@ -92,11 +193,21 @@ export default function BookCall() {
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle slot taken scenario
+        if (data.slotTaken) {
+          toast.error("Slot no longer available", {
+            description: "This time was just booked. Refreshing available slots...",
+          });
+          // Refresh available slots
+          await fetchAvailableSlots(selectedDate);
+          setSelectedTime(null);
+          return;
+        }
         throw new Error(data.error || "Failed to book");
       }
 
-      toast.success("Booking request sent!", {
-        description: "Check your email for confirmation details.",
+      toast.success("Booking confirmed!", {
+        description: `Your call is scheduled for ${formatDateString()} at ${selectedTime}`,
       });
 
       // Reset form
@@ -104,6 +215,7 @@ export default function BookCall() {
       setSelectedTime(null);
       setName("");
       setEmail("");
+      setAvailableSlots([]);
     } catch (error) {
       toast.error("Something went wrong", {
         description: error instanceof Error ? error.message : "Please try again later.",
@@ -113,10 +225,22 @@ export default function BookCall() {
     }
   };
 
-  const timeSlots = [
-    "09:00", "09:30", "10:00", "10:30", "11:00", 
-    "13:00", "13:30", "14:00", "14:30", "15:00"
-  ];
+  // Show loading state until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <>
+        <Head>
+          <title>Book a Call | {siteConfig.name}</title>
+        </Head>
+        <main className="min-h-screen pb-16 px-4 flex items-center justify-center" style={{ paddingTop: '120px', backgroundColor: 'var(--background)' }}>
+          <div className="flex items-center gap-3" style={{ color: 'var(--muted)' }}>
+            <Loader2 className="animate-spin" size={20} />
+            <span className="text-sm">Loading calendar...</span>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
@@ -212,7 +336,7 @@ export default function BookCall() {
                 </div>
 
                 <div className="grid grid-cols-7 gap-1 text-center">
-                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
+                  {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
                     <div key={`${day}-${idx}`} className="text-[9px] font-bold pb-4 sm:pb-6 tracking-widest" style={{ color: 'var(--muted)', opacity: 0.5 }}>{day}</div>
                   ))}
                   {/* Empty cells for days before the 1st */}
@@ -220,88 +344,162 @@ export default function BookCall() {
                     <div key={`empty-${i}`} />
                   ))}
                   
-                  {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }, (_, i) => i + 1).map(day => (
-                    <button
-                      key={day}
-                      onClick={() => setSelectedDate(day)}
-                      className={cn(
-                        "aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl text-xs font-semibold transition-all outline-none",
-                        selectedDate === day && "scale-105 shadow-lg"
-                      )}
-                      style={{
-                        backgroundColor: selectedDate === day ? 'var(--accent)' : 'transparent',
-                        color: selectedDate === day ? 'white' : 'var(--muted)'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedDate !== day) {
-                          e.currentTarget.style.backgroundColor = 'var(--card)';
-                          e.currentTarget.style.color = 'var(--foreground)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (selectedDate !== day) {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = 'var(--muted)';
-                        }
-                      }}
-                    >
-                      {day}
-                    </button>
-                  ))}
+                  {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }, (_, i) => i + 1).map(day => {
+                    const isSelected = selectedDate && 
+                      selectedDate.getDate() === day && 
+                      selectedDate.getMonth() === currentMonth && 
+                      selectedDate.getFullYear() === currentYear;
+                    const isSelectable = isDaySelectable(day);
+                    const isSunday = isDaySunday(day);
+                    
+                    return (
+                      <button
+                        key={day}
+                        onClick={() => isSelectable && handleDateSelect(day)}
+                        disabled={!isSelectable}
+                        className={cn(
+                          "aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl text-xs font-semibold transition-all outline-none",
+                          isSelected && "scale-105 shadow-lg"
+                        )}
+                        style={{
+                          backgroundColor: isSelected ? 'var(--accent)' : 'transparent',
+                          color: isSelected 
+                            ? 'white' 
+                            : !isSelectable 
+                              ? 'var(--muted)' 
+                              : isSunday 
+                                ? 'var(--muted)' 
+                                : 'var(--foreground)',
+                          opacity: !isSelectable ? 0.3 : isSunday ? 0.5 : 1,
+                          cursor: isSelectable ? 'pointer' : 'default'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelectable) return;
+                          if (!isSelected) {
+                            e.currentTarget.style.backgroundColor = 'var(--card-border)';
+                            e.currentTarget.style.color = 'var(--foreground)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelectable) return;
+                          if (!isSelected) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = isSunday ? 'var(--muted)' : 'var(--foreground)';
+                          }
+                        }}
+                      >
+                        {day}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* 3. RIGHT COLUMN: Time Slots */}
               <div className="lg:col-span-4 p-6 sm:p-8" style={{ backgroundColor: 'var(--card)' }}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--foreground)' }}>Available Slots</h3>
-                  <div className="flex p-0.5 rounded-lg border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--card-border)', opacity: 0.8 }}>
-                    <button onClick={() => setTimeFormat("24")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "24" ? 'var(--accent)' : 'transparent', color: timeFormat === "24" ? 'white' : 'var(--muted)', opacity: timeFormat === "24" ? 0.3 : 1 }}>24H</button>
-                    <button onClick={() => setTimeFormat("12")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "12" ? 'var(--accent)' : 'transparent', color: timeFormat === "12" ? 'white' : 'var(--muted)', opacity: timeFormat === "12" ? 0.3 : 1 }}>12H</button>
-                  </div>
+                  <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--foreground)' }}>
+                    {selectedDate ? 'Available Slots' : 'Select a Date'}
+                  </h3>
+                  {selectedDate && availableSlots.length > 0 && (
+                    <div className="flex p-0.5 rounded-lg border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--card-border)', opacity: 0.8 }}>
+                      <button onClick={() => setTimeFormat("24")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "24" ? 'var(--accent)' : 'transparent', color: timeFormat === "24" ? 'white' : 'var(--muted)', opacity: timeFormat === "24" ? 0.3 : 1 }}>24H</button>
+                      <button onClick={() => setTimeFormat("12")} className={cn("px-2 py-0.5 text-[8px] font-bold rounded")} style={{ backgroundColor: timeFormat === "12" ? 'var(--accent)' : 'transparent', color: timeFormat === "12" ? 'white' : 'var(--muted)', opacity: timeFormat === "12" ? 0.3 : 1 }}>12H</button>
+                    </div>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-2.5 max-h-[280px] lg:max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-                  {timeSlots.map(time => {
-                    // Convert to 12h format if needed
-                    let displayTime = time;
-                    if (timeFormat === "12") {
-                      const [hours, mins] = time.split(":");
-                      const h = parseInt(hours);
-                      const suffix = h >= 12 ? "PM" : "AM";
-                      const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
-                      displayTime = `${h12}:${mins} ${suffix}`;
-                    }
-                    return (
-                      <button 
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={cn(
-                          "w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl border transition-all text-xs font-bold outline-none shadow-sm"
-                        )}
-                        style={{
-                          backgroundColor: selectedTime === time ? 'var(--accent)' : 'var(--card)',
-                          borderColor: selectedTime === time ? 'var(--accent)' : 'var(--card-border)',
-                          color: selectedTime === time ? 'white' : 'var(--muted)'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (selectedTime !== time) {
-                            e.currentTarget.style.borderColor = 'var(--accent)';
-                            e.currentTarget.style.color = 'var(--foreground)';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (selectedTime !== time) {
-                            e.currentTarget.style.borderColor = 'var(--card-border)';
-                            e.currentTarget.style.color = 'var(--muted)';
-                          }
-                        }}
-                      >
-                        {displayTime}
-                      </button>
-                    );
-                  })}
-                </div>
+                {/* Loading state */}
+                {isFetchingSlots && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <Loader2 className="animate-spin" size={24} style={{ color: 'var(--accent)' }} />
+                    <span className="text-xs" style={{ color: 'var(--muted)' }}>Loading available times...</span>
+                  </div>
+                )}
+
+                {/* Error state */}
+                {slotsError && !isFetchingSlots && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <AlertCircle size={24} style={{ color: 'var(--muted)' }} />
+                    <span className="text-xs text-center" style={{ color: 'var(--muted)' }}>{slotsError}</span>
+                    <button 
+                      onClick={() => selectedDate && fetchAvailableSlots(selectedDate)}
+                      className="text-xs px-4 py-2 rounded-lg transition-colors"
+                      style={{ backgroundColor: 'var(--card-border)', color: 'var(--foreground)' }}
+                    >
+                      Try again
+                    </button>
+                  </div>
+                )}
+
+                {/* No date selected state */}
+                {!selectedDate && !isFetchingSlots && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <CalendarX size={24} style={{ color: 'var(--muted)', opacity: 0.5 }} />
+                    <span className="text-xs text-center" style={{ color: 'var(--muted)' }}>
+                      Select a date from the calendar to see available times
+                    </span>
+                  </div>
+                )}
+
+                {/* Sunday selected state */}
+                {selectedDate && isWeekend && !isFetchingSlots && !slotsError && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <CalendarX size={24} style={{ color: 'var(--muted)', opacity: 0.5 }} />
+                    <span className="text-xs text-center" style={{ color: 'var(--muted)' }}>
+                      No availability on Sundays.<br />Please select another day (Mon-Sat).
+                    </span>
+                  </div>
+                )}
+
+                {/* No slots available state */}
+                {selectedDate && !isWeekend && availableSlots.length === 0 && !isFetchingSlots && !slotsError && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <CalendarX size={24} style={{ color: 'var(--muted)', opacity: 0.5 }} />
+                    <span className="text-xs text-center" style={{ color: 'var(--muted)' }}>
+                      No available slots for this date.<br />Please try another day.
+                    </span>
+                  </div>
+                )}
+
+                {/* Available slots */}
+                {selectedDate && availableSlots.length > 0 && !isFetchingSlots && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-2.5 max-h-[280px] lg:max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+                    {availableSlots.map(time => {
+                      // Convert to 12h format if needed
+                      const displayTime = timeFormat === "12" ? formatTime12h(time) : time;
+                      
+                      return (
+                        <button 
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={cn(
+                            "w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl border transition-all text-xs font-bold outline-none shadow-sm"
+                          )}
+                          style={{
+                            backgroundColor: selectedTime === time ? 'var(--accent)' : 'var(--card)',
+                            borderColor: selectedTime === time ? 'var(--accent)' : 'var(--card-border)',
+                            color: selectedTime === time ? 'white' : 'var(--muted)'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedTime !== time) {
+                              e.currentTarget.style.borderColor = 'var(--accent)';
+                              e.currentTarget.style.color = 'var(--foreground)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedTime !== time) {
+                              e.currentTarget.style.borderColor = 'var(--card-border)';
+                              e.currentTarget.style.color = 'var(--muted)';
+                            }
+                          }}
+                        >
+                          {displayTime}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 
