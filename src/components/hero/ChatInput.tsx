@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Send } from "lucide-react";
-import { FormEvent, useRef, useEffect, useState } from "react";
+import { FormEvent, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
@@ -27,11 +26,13 @@ export function ChatInput({
   className,
 }: ChatInputProps) {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    window.requestAnimationFrame(() => setIsMounted(true));
-    const timer = setTimeout(() => inputRef.current?.focus(), 100);
+    const timer = setTimeout(() => {
+      if (window.matchMedia('(hover: hover)').matches) {
+        inputRef.current?.focus();
+      }
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -48,11 +49,8 @@ export function ChatInput({
     inputRef.current?.focus();
   };
 
-  if (!isMounted) return null;
-
   return (
     <div className={cn("flex flex-col", className)}>
-      {/* Sugestie pytań */}
       {showSuggestions && suggestedQuestions.length > 0 && (
         <div className="flex flex-wrap gap-1.5 justify-center mb-3">
           {suggestedQuestions.map((question) => (
@@ -61,8 +59,8 @@ export function ChatInput({
               onClick={() => handleSuggestedClick(question)}
               disabled={isLoading}
               className={cn(
-                "text-xs rounded-full border px-3 py-1 transition-all disabled:opacity-50",
-                "hover:brightness-125 active:scale-95"
+                "text-xs rounded-full border px-3 py-1 transition-transform disabled:opacity-50",
+                "hover:border-[var(--accent)] hover:text-[var(--foreground)] active:scale-95"
               )}
               style={{
                 backgroundColor: 'var(--card)',
@@ -76,16 +74,13 @@ export function ChatInput({
         </div>
       )}
 
-      {/* Główny Input */}
       <form onSubmit={onSubmit} className="relative">
         <div
-          className={cn(
-            "flex items-center gap-2 rounded-full border transition-all px-4 py-1.5"
-            // USUNIĘTO: focus-within:ring oraz focus-within:border-violet-500
-          )}
+          className="flex items-center gap-2 rounded-full border px-4 py-1.5"
           style={{
             backgroundColor: 'var(--card)',
             borderColor: 'var(--card-border)',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.02)'
           }}
         >
           <textarea
@@ -109,12 +104,10 @@ export function ChatInput({
             rows={1}
             placeholder="Ask anything about Paweł..."
             disabled={isLoading}
-            className={cn(
-              "flex-1 bg-transparent text-sm outline-none resize-none overflow-hidden py-2 leading-tight"
-            )}
+            className="flex-1 bg-transparent text-sm outline-none resize-none overflow-hidden py-2 leading-tight placeholder:opacity-50"
             style={{
               color: 'var(--foreground)',
-              appearance: 'none',
+              caretColor: 'var(--accent)'
             }}
           />
           
@@ -122,9 +115,12 @@ export function ChatInput({
             type="submit"
             disabled={!input.trim() || isLoading}
             className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-full transition-all shrink-0",
-              "bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-0 disabled:scale-90"
+              "flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-white transition-transform",
+              "disabled:opacity-0 disabled:scale-90 hover:opacity-90 hover:scale-105"
             )}
+            style={{
+               backgroundColor: 'var(--accent)'
+            }}
           >
             <Send className="w-4 h-4" />
           </button>

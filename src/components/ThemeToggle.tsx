@@ -4,18 +4,22 @@ import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useEffect, useState } from "react";
-
+import { cn } from "@/lib/utils"; 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
+useEffect(() => {
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted) {
     return (
       <div className="w-14 h-14 rounded-full glass-strong flex items-center justify-center">
-        <Moon size={20} className="text-white/50" />
+        <Moon size={20} className="text-[var(--muted)]" />
       </div>
     );
   }
@@ -29,8 +33,14 @@ function ThemeToggleClient() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-14 rounded-full glass-strong flex items-center justify-center hover:bg-white/10 transition-all"
+      className={cn(
+        "relative w-14 h-14 rounded-full glass-strong flex items-center justify-center",
+        "transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+      )}
       aria-label="Toggle theme"
+      style={{
+        boxShadow: 'var(--shadow-elevation-low)' 
+      }}
     >
       <motion.div
         initial={false}
@@ -54,7 +64,7 @@ function ThemeToggleClient() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="absolute"
       >
-        <Sun size={20} className="text-yellow-500" />
+        <Sun size={20} className="text-amber-500" />
       </motion.div>
     </button>
   );
