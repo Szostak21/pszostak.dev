@@ -229,7 +229,7 @@ export default function Guestbook() {
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
               <span className="text-(--foreground)">Leave Your</span>{" "}
-              <span className="gradient-text">Mark</span>
+              <span className="text-violet-500">Mark</span>
             </h1>
             <p className="text-lg sm:text-xl text-(--muted) max-w-2xl mx-auto">
               Share your thoughts, feedback, or just say hi!
