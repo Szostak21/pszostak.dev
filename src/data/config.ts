@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { ElementType } from "react";
 
 export interface Social {
@@ -17,11 +17,6 @@ export const socials: Social[] = [
     name: "LinkedIn",
     url: "https://linkedin.com/in/yourprofile",
     icon: Linkedin,
-  },
-  {
-    name: "Twitter",
-    url: "https://twitter.com/yourhandle",
-    icon: Twitter,
   },
   {
     name: "Email",

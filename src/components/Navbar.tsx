@@ -21,12 +21,36 @@ export default function Navbar() {
   const [contactOpen, setContactOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  // Determine active section based on current page
   const isHomePage = router.pathname === '/';
   const [activeSection, setActiveSection] = useState(isHomePage ? "home" : "");
 
+  const scrollToSection = (elementId: string) => {
+    const el = document.getElementById(elementId);
+    if (el) {
+      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+      const offset = 120; 
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
   useEffect(() => {
-    // Only track scroll on home page
+    if (isHomePage) {
+      const targetSection = sessionStorage.getItem('scrollToSection');
+      if (targetSection) {
+        sessionStorage.removeItem('scrollToSection');
+        setTimeout(() => {
+          scrollToSection(targetSection);
+        }, 150);
+      }
+    }
+  }, [isHomePage, router.pathname]);
+
+  useEffect(() => {
     if (!isHomePage) {
       return;
     }
@@ -34,7 +58,7 @@ export default function Navbar() {
     const handleScroll = () => {
       const sections = navItems.map((item) => item.section);
       let currentSection = sections[0];
-      const offset = 140;
+      const offset = 140; 
       
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
@@ -68,37 +92,29 @@ export default function Navbar() {
   }, [isHomePage]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
-    // Only handle scroll for in-page sections on home page
     if (item.href.startsWith('/#') && isHomePage) {
       e.preventDefault();
       setMobileMenuOpen(false);
-      const sectionId = item.section;
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      scrollToSection(item.section);
       return;
     }
-    // Home link scrolls to top on home page
     if (item.href === '/' && isHomePage) {
       e.preventDefault();
       setMobileMenuOpen(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    // When clicking a section link from other pages, navigate to home WITH hash
     if (item.href.startsWith('/#') && !isHomePage) {
       e.preventDefault();
       setMobileMenuOpen(false);
-      router.push(item.href);
+      sessionStorage.setItem('scrollToSection', item.section);
+      router.push('/');
       return;
     }
-    // For other cases, allow default navigation
     setMobileMenuOpen(false);
   };
 
   const handleBookCallClick = () => {
-    // Open the contact drawer so user can choose between booking or emailing
     setContactOpen(true);
     setMobileMenuOpen(false);
   };
@@ -107,13 +123,13 @@ export default function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out py-6"
+          "fixed top-0 left-0 right-0 z-50 py-6"
         )}
       >
         <nav className="max-w-350 mx-auto px-6 md:px-8 lg:px-12">
           {/* Desktop Layout */}
           <div className="hidden md:flex items-center justify-center relative">
-            {/* Theme Toggle - Absolute Left */}
+            {/* Theme Toggle */}
             <div className="absolute left-0">
               <ThemeToggle />
             </div>
@@ -126,7 +142,7 @@ export default function Navbar() {
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
                   className={cn(
-                    "relative text-sm font-semibold rounded-full transition-all duration-300 cursor-pointer flex items-center"
+                    "relative text-sm font-semibold rounded-full transition-colors duration-300 cursor-pointer flex items-center"
                   )}
                     style={{ 
                       padding: "10px 24px",
@@ -155,7 +171,7 @@ export default function Navbar() {
               <button
                 onClick={handleBookCallClick}
                 className={cn(
-                  "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-all duration-300 hover:scale-105 h-14",
+                  "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-transform duration-300 hover:scale-105 h-14",
                   contactOpen && "ring-2 ring-(--accent) ring-opacity-50"
                 )}
                 style={{ 
@@ -182,32 +198,32 @@ export default function Navbar() {
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span 
                   className={cn(
-                    "block h-0.5 w-5 rounded-full transition-all duration-300",
+                    "block h-0.5 w-5 rounded-full transition-transform duration-300",
                     mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
                   )}
                   style={{ background: 'var(--foreground)' }}
                 />
                 <span 
                   className={cn(
-                    "block h-0.5 w-5 rounded-full transition-all duration-300",
+                    "block h-0.5 w-5 rounded-full transition-opacity duration-300",
                     mobileMenuOpen ? "opacity-0" : "opacity-100"
                   )}
                   style={{ background: 'var(--foreground)' }}
                 />
                 <span 
                   className={cn(
-                    "block h-0.5 w-5 rounded-full transition-all duration-300",
+                    "block h-0.5 w-5 rounded-full transition-transform duration-300",
                     mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
                   )}
                   style={{ background: 'var(--foreground)' }}
                 />
               </div>
             </button>
-            {/* Book a Call Button - Mobile (visible in header) */}
+            {/* Book a Call Button - Mobile */}
             <button
               onClick={handleBookCallClick}
               className={cn(
-                "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-all duration-300",
+                "glass-strong rounded-full shadow-xl shadow-black/10 flex items-center gap-2 text-sm font-semibold transition-transform duration-300",
                 contactOpen && "ring-2 ring-(--accent) ring-opacity-50"
               )}
               style={{ 
@@ -238,7 +254,7 @@ export default function Navbar() {
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item)}
                     className={cn(
-                      "relative text-sm font-semibold rounded-full transition-all duration-300 cursor-pointer text-center"
+                      "relative text-sm font-semibold rounded-full transition-colors duration-300 cursor-pointer text-center"
                     )}
                       style={{ 
                         padding: "12px 24px",
@@ -253,7 +269,7 @@ export default function Navbar() {
                 {/* Book a Call in Mobile Menu */}
                 <button
                   onClick={handleBookCallClick}
-                  className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full transition-all duration-300 mt-2"
+                  className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full transition-transform duration-300 mt-2 hover:scale-[1.02]"
                   style={{ 
                     padding: "12px 24px",
                     color: 'var(--foreground)',
